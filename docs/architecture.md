@@ -7,6 +7,18 @@ systems, data models, or a test/build system. V1 therefore establishes a small
 set of reusable Python contracts in `pepworld_intelligence.core`; it does not
 claim to implement the full master architecture or fabricate domain data.
 
+## Repository layout and guidance
+
+The implementation remains in the existing Python package
+`pepworld_intelligence/`; tests remain in `tests/`; and this guide remains in
+`docs/`. Repository-wide Copilot architecture guidance is in
+`.github/copilot-instructions.md`, scoped rules for existing package/tests/docs
+are in `.github/instructions/`, and `AGENTS.md` records repository commands and
+operating rules. This deliberately does not create empty `src/`, engine, OS,
+registry, schema, or domain directories: the architecture permits the actual
+language/framework layout to vary, and no implementation currently needs those
+directories.
+
 The contracts are:
 
 - `EvidenceRecord`: preserves a raw value and requires identifiers for its
@@ -34,6 +46,10 @@ Intelligence System V1 → shared capabilities/engines and operating systems →
 domain and universal intelligence. No new engine or OS wrappers are created
 here: the repository had no prior inventory to extend, and the shared contracts
 are not themselves a complete engine or operating system.
+
+There is no engine or OS registry yet because the repository contains no
+implemented engines or operating systems to register. Add a registry only when
+it can describe real components and provide architectural discoverability.
 
 The V1 loop is modeled as traceable, connected stages rather than an enforced
 linear workflow:
