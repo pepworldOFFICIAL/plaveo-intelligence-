@@ -181,9 +181,34 @@ limitations.
 
 ## Getting started
 
-The project currently has a plain Python package at the repository root and no
-packaging or external runtime-dependency configuration. Work from the repository
-root to import the package directly:
+### Prerequisites
+
+- Python 3.10 or later (the package uses `X | None` type-union syntax).
+- No external runtime dependencies are required; only the Python standard
+  library is used.
+
+### Installation
+
+The package can be used in two ways:
+
+1. **Work directly from a clone**, without installing anything, by running
+   Python from the repository root (see [Usage](#usage) below).
+2. **Install it into a virtual environment** with the minimal `pyproject.toml`
+   provided in the repository root:
+
+   ```sh
+   python -m venv .venv
+   source .venv/bin/activate  # on Windows: .venv\Scripts\activate
+   pip install -e .
+   ```
+
+   This performs an editable install of the `pepworld_intelligence` package
+   only; it does not add any third-party dependencies, services, or CLI tools.
+
+### Usage
+
+Import the package directly (either after an editable install, or by running
+Python from the repository root):
 
 ```python
 from pepworld_intelligence import EvidenceRecord, FieldState, FieldValue
@@ -200,11 +225,24 @@ The identifiers and value above are illustrative caller-provided values, not
 repository evidence. This example demonstrates contracts only; it does not
 collect, validate, store, or analyze information.
 
+### Configuration and environment variables
+
+There is currently no configuration file, environment variable, or secret
+required to use the contracts in this repository. If you extend the project
+with configuration of your own, keep real secrets out of source control (see
+[`.gitignore`](.gitignore) and [Security](#security) below).
+
+### Testing
+
 Run the existing tests from the repository root:
 
 ```sh
 python -m unittest discover -s tests -v
 ```
+
+A GitHub Actions workflow ([`.github/workflows/tests.yml`](.github/workflows/tests.yml))
+runs this same command on pushes and pull requests targeting `main` across
+Python 3.10, 3.11, and 3.12.
 
 ## Repository structure
 
@@ -216,6 +254,7 @@ python -m unittest discover -s tests -v
 ├── LICENSE                           # MIT license
 ├── README.md                         # Project overview and status
 ├── SECURITY.md                       # Security limitations and disclosure
+├── pyproject.toml                    # Minimal packaging metadata (editable installs)
 ├── docs/
 │   └── architecture.md               # Implemented contracts and target architecture
 ├── pepworld_intelligence/
@@ -225,7 +264,9 @@ python -m unittest discover -s tests -v
 │   └── test_core.py                  # Standard-library unittest coverage
 └── .github/
     ├── copilot-instructions.md
-    └── instructions/                 # Scoped guidance for code, evidence, tests, and docs
+    ├── instructions/                 # Scoped guidance for code, evidence, tests, and docs
+    └── workflows/
+        └── tests.yml                 # CI: runs the unittest suite on push/PR to main
 ```
 
 There is no `src/` tree or engine, operating-system, domain, or registry
