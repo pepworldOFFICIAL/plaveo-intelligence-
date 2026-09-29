@@ -44,6 +44,12 @@ class FieldValue(Generic[T]):
     invalid_reason: str | None = None
 
     def __post_init__(self) -> None:
+        if not isinstance(self.state, FieldState):
+            raise ValueError("state must be a FieldState")
+        if self.missing_reason is not None and not isinstance(
+            self.missing_reason, MissingReason
+        ):
+            raise ValueError("missing_reason must be a MissingReason")
         if self.state is FieldState.PRESENT and self.value is None:
             raise ValueError("present fields require a value")
         if self.state is FieldState.MISSING:
@@ -102,16 +108,21 @@ class IntelligenceStage(str, Enum):
 
 @dataclass(frozen=True)
 class TraceEvent:
-    """A recorded pipeline step connecting existing input and output identifiers."""
+    """A pipeline step connecting input and output identifiers and its transformation."""
 
     stage: IntelligenceStage
     input_ids: tuple[str, ...]
     output_ids: tuple[str, ...]
     event_id: str
+    transformation: str | None = None
 
     def __post_init__(self) -> None:
         if not self.event_id:
             raise ValueError("event_id is required")
+        if not isinstance(self.stage, IntelligenceStage):
+            raise ValueError("stage must be an IntelligenceStage")
+        if self.transformation is not None and not self.transformation.strip():
+            raise ValueError("transformation cannot be empty")
         if any(not identifier for identifier in self.input_ids + self.output_ids):
             raise ValueError("trace identifiers cannot be empty")
 

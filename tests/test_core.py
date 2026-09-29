@@ -23,6 +23,8 @@ class FieldValueTests(unittest.TestCase):
         self.assertEqual(value.missing_reason, MissingReason.NOT_COLLECTED)
         with self.assertRaises(ValueError):
             FieldValue(state=FieldState.MISSING)
+        with self.assertRaises(ValueError):
+            FieldValue(state=FieldState.MISSING, missing_reason="unknown")
 
     def test_invalid_value_is_preserved_with_reason(self):
         value = FieldValue(
@@ -75,11 +77,20 @@ class TraceabilityTests(unittest.TestCase):
             stage=IntelligenceStage.ANALYZE,
             input_ids=("evidence-1",),
             output_ids=("finding-1",),
+            transformation="compare evidence against the recorded question",
         )
         trace = PipelineTrace().record(observed).record(analyzed)
 
         self.assertEqual(trace.events, (observed, analyzed))
+        self.assertEqual(analyzed.transformation, "compare evidence against the recorded question")
         self.assertEqual(PipelineTrace().events, ())
+        with self.assertRaises(ValueError):
+            TraceEvent(
+                event_id="event-3",
+                stage="analyze",
+                input_ids=(),
+                output_ids=(),
+            )
 
 
 if __name__ == "__main__":
