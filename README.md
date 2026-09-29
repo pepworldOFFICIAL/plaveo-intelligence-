@@ -78,8 +78,9 @@ domain intelligence or a complete universal intelligence workflow.
 
 ### Five Lenses
 
-The Five Lenses are a conceptual way to examine an intelligence problem from
-complementary perspectives—not five implemented modules or a required sequence:
+The repository does not define canonical names for the Five Lenses. The
+following questions are an illustrative reading aid, not an official taxonomy,
+implemented modules, or a required sequence:
 
 1. **Evidence and provenance:** What was observed, by which source, and what
    transformations were explicitly applied?
